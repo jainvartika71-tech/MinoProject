@@ -1,0 +1,13 @@
+{
+  "is_calibrated": true,
+  "pixels_per_mm": 18.68,
+  "mm_per_pixel": 0.053533,
+  "method": "ruler",
+  "reference_name": "Standard 100mm Reference Ruler",
+  "reference_dimension_mm": 100.0,
+  "measured_pixels": 1868.0,
+  "camera_name": "MacBook Built-in Camera",
+  "fixed_height_cm": 50.0,
+  "calibrated_at": "2026-11-12T07:58:17.132056Z",
+  "notes": "Fixed overhead calibration"
+}

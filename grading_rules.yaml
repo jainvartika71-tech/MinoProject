@@ -1,0 +1,44 @@
+# Onion Grading Automation: Procurement Rules Configuration
+# NOTE: Changing grading thresholds must never require retraining the model.
+# All grading logic reads directly from this YAML configuration.
+
+rules_version: "0.1-placeholder"
+is_placeholder: true
+disclaimer: "PLACEHOLDER RULES: Derived from standard Agmark / NAFED procurement guidelines (Grade A: 45-65mm, URS: 35-45mm/minor blemish). Must be officially verified before production deployment."
+
+# Standard ArUco reference marker configuration
+marker:
+  dictionary: "DICT_4X4_50"
+  id: 0
+  size_mm: 50.0  # Standard physical dimension in mm (width and height of printed marker square)
+
+# Sizing thresholds in millimeters (onion minor axis diameter)
+size_mm:
+  grade_a:
+    min: 45.0  # Grade A minimum diameter (mm)
+    max: 65.0  # Grade A maximum diameter (mm)
+  urs:
+    undersize_min: 35.0  # URS undersize lower boundary (mm)
+    undersize_max: 45.0  # Under 45mm down to 35mm qualifies as URS
+    oversize_min: 65.0   # Onions larger than 65mm up to 75mm qualify as URS
+    oversize_max: 75.0
+  reject:
+    extreme_undersize: 35.0  # Below 35mm is rejected as unmarketable cull
+    extreme_oversize: 75.0   # Above 75mm without specific jumbo contract is rejected
+
+# Defect classification to grading outcomes
+# Possible classes: healthy, rotten, sprouted, damaged, other
+defects:
+  rotten: "reject"      # Any presence of rot, decay, or mold -> Reject
+  sprouted: "urs"       # Sprouted onions permitted only under URS penalty
+  damaged: "urs"        # Surface cuts, bruising, peeling permitted under URS
+  healthy: "by_size"    # Graded strictly by diameter
+  other: "urs"          # Unidentified blemishes placed in URS or flagged
+
+# Quality and confidence gating
+thresholds:
+  confidence_min: 0.50          # Model detection confidence below which 'needs human review' is assigned
+  min_onions_per_photo: 5       # Minimum expected count per photo for batch validity (demo default: 5, target: 20-50)
+  blur_var_threshold: 80.0      # Laplacian variance threshold; below this image is blurry
+  brightness_min: 45.0          # Mean intensity minimum (detect underexposure)
+  brightness_max: 235.0         # Mean intensity maximum (detect harsh flash glare)
